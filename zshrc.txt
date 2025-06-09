@@ -13,7 +13,7 @@ if command -v figlet &>/dev/null && command -v lolcat &>/dev/null; then
   figlet -f slant "Welcome back, Neo.." | lolcat
 fi
 
-# ─[🔌 ZSH PLUGINS]──────────────────────────────
+# ─[ZSH PLUGINS]──────────────────────────────
 # Autosuggestions
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
