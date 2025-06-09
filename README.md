@@ -1,1 +1,1 @@
-This clean, custom .zshrc file is compatible with Oh My Zsh, Powerlevel10k, and Fastfetch and doesn't display annoying warnings. It also includes some useful aliases for Arch Linux, Kali Linux, or any other.
+This clean, custom .zshrc file is compatible with Oh My Zsh, Powerlevel10k, and Fastfetch and doesn't display annoying warnings. It also includes some useful aliases for Arch Linux, Kali Linux, or any other distro.
