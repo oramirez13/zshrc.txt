@@ -1,55 +1,65 @@
-# Silenciar advertencias de Powerlevel10k
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+# Orami's Cyberpunk ZSH Config for Kali Linux
 
-# Ruta de Oh My Zsh
-export ZSH="$HOME/.oh-my-zsh"
+# ─[POWERLEVEL10K THEME]──────────────────────────────
+source ~/powerlevel10k/powerlevel10k.zsh-theme
 
-# Tema Powerlevel10k
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# ─[FASTFETCH INFO]──────────────────────────────
+if command -v fastfetch &>/dev/null; then
+  fastfetch --logo color --color-keys magenta --color-title cyan
+fi
 
-autoload -Uz compinit
-compinit
+# ─[BANNER]──────────────────────────────
+if command -v figlet &>/dev/null && command -v lolcat &>/dev/null; then
+  figlet -f slant "Welcome back, Neo.." | lolcat
+fi
 
-# Mejoras en la navegación con TAB
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+# ─[🔌 ZSH PLUGINS]──────────────────────────────
+# Autosuggestions
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# Plugins
-# plugins=(git archlinux z sudo)
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+# Syntax highlighting (debe ir al final)
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# Inicialización de Oh My Zsh
-source $ZSH/oh-my-zsh.sh
+# ─[ALIAS DE EXA]──────────────────────────────
+alias ls='exa -al --color=always --group-directories-first'
+alias la='exa -a'
+alias ll='exa -l'
+alias lt='exa -aT --icons'
+alias tree='exa -T --icons'
 
-# Powerlevel10k config (no borrar)
+# ─[ALIAS DE SISTEMA Y PENTEST]──────────────────────────────
+alias update='sudo apt update && sudo apt upgrade -y'
+alias ports='netstat -tulanp'
+alias ipinfo='ip a'
+alias myip='curl ifconfig.me'
+alias pyserve='python3 -m http.server'
+alias scan='nmap -sV -Pn'
+alias gs='git status'
+alias gc='git commit -m'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# ─[🐍 PYTHON ENTORNO]──────────────────────────────
+alias venv="python3 -m venv .venv && source .venv/bin/activate"
+
+# ─[CARGAR CAMBIOS]──────────────────────────────
+alias reload='source ~/.zshrc'
+
+# ─[HISTORIAL INTELIGENTE]──────────────────────────────
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+
+# ─[PROMPT LIGHTNING]──────────────────────────────
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Editor por defecto
-export EDITOR=nano
+# ─[COMPLETIONS Y SUGERENCIAS]──────────────────────────────
+autoload -Uz compinit && compinit
+zle -N autosuggest-accept
+bindkey '^ ' autosuggest-accept
 
-# Colores para `ls` y otros comandos
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
-
-# Alias útiles
-alias update="sudo pacman -Syu"
-alias install="sudo pacman -S"
-alias remove="sudo pacman -Rns"
-alias clean="sudo pacman -Rns \$(pacman -Qdtq)"
-alias mirrord="sudo reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist"
-alias yayupdate="yay -Syu --devel --timeupdate"
-alias grep="grep --color=auto"
-alias cls="clear"
-# Reemplazo moderno de ls con exa
-alias ls='exa --color=always --group-directories-first'
-alias ll='exa -lah --git --icons'
-alias la='exa -a --icons'
-alias tree='exa --tree --level=2 --icons'
-
-# Path adicional si usas yay desde /opt o ~/.local/bin
-export PATH=$PATH:$HOME/.local/bin:/opt/yay/bin
-
-# Mostrar fastfetch al iniciar la terminal
-clear
-fastfetch
-echo -e "\e[1;36m[ orami - Arch Linux VM ]\e[0m"
+# ─[FINAL]──────────────────────────────
+echo "%F{magenta}orami infosec%f"
