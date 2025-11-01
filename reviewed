@@ -1,0 +1,141 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ────────────────────────────────────────────────
+# ⚡ Orami's Cyberpunk ZSH Config for Kali Linux ⚡
+# ────────────────────────────────────────────────
+
+# ─[CONFIGURACIÓN BÁSICA DE ZSH]──────────────────────────────
+setopt autocd
+setopt interactivecomments
+setopt magicequalsubst
+setopt nonomatch
+setopt notify
+setopt numericglobsort
+setopt promptsubst
+
+WORDCHARS='_-' 
+PROMPT_EOL_MARK=""
+
+# ─[HISTORIAL INTELIGENTE]──────────────────────────────
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt hist_expire_dups_first 
+setopt hist_ignore_space
+setopt hist_verify
+
+# ─[KEYBINDINGS]──────────────────────────────
+bindkey -e
+bindkey ' ' magic-space
+bindkey '^U' backward-kill-line
+bindkey '^[[3;5~' kill-word
+bindkey '^[[3~' delete-char
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
+bindkey '^[[5~' beginning-of-buffer-or-history
+bindkey '^[[6~' end-of-buffer-or-history
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
+bindkey '^[[Z' undo
+
+# ─[POWERLEVEL10K THEME]──────────────────────────────
+# Requiere: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+if [ -f ~/powerlevel10k/powerlevel10k.zsh-theme ]; then
+  source ~/powerlevel10k/powerlevel10k.zsh-theme
+fi
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ─[FASTFETCH INFO]──────────────────────────────
+if command -v fastfetch &>/dev/null; then
+  fastfetch --logo color --color-keys magenta --color-title cyan
+fi
+
+# ─[BANNER]──────────────────────────────
+if command -v figlet &>/dev/null && command -v lolcat &>/dev/null; then
+  figlet -f slant "Welcome back, Neo.." | lolcat
+fi
+
+# ─[COMPLETIONS Y SUGERENCIAS]──────────────────────────────
+autoload -Uz compinit
+compinit -d ~/.cache/zcompdump
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' verbose true
+
+# ─[ZSH PLUGINS]──────────────────────────────
+# Clonar previamente:
+# git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+# git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh/zsh-syntax-highlighting
+if [ -f ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+  source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# ─[ALIAS DE SISTEMA Y PENTEST]──────────────────────────────
+alias cls='clear'
+alias update='sudo apt update && sudo apt upgrade -y'
+alias ports='netstat -tulanp'
+alias ipinfo='ip a'
+alias myip='curl ifconfig.me'
+alias pyserve='python3 -m http.server'
+alias scan='nmap -sV -Pn'
+alias gs='git status'
+alias gc='git commit -m'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias reload='source ~/.zshrc'
+
+# ─[ALIAS DE EXA]──────────────────────────────
+if command -v exa &>/dev/null; then
+  alias ls='exa -al --color=always --group-directories-first'
+  alias la='exa -a'
+  alias ll='exa -l'
+  alias lt='exa -aT --icons'
+  alias tree='exa -T --icons'
+else
+  alias ls='ls --color=auto -lh'
+  alias la='ls -A'
+  alias ll='ls -l'
+  alias l='ls -CF'
+fi
+
+# ─[🐍 PYTHON ENTORNO]──────────────────────────────
+alias venv="python3 -m venv .venv && source .venv/bin/activate"
+
+# ─[APARIENCIA DEL PROMPT ALTERNATIVO]──────────────────────────────
+# En caso de no usar Powerlevel10k
+PROMPT_ALTERNATIVE=twoline
+configure_prompt() {
+  prompt_symbol=㉿
+  PROMPT=$'%F{green}┌──(%B%F{blue}%n@%m%b%F{green})-[%B%F{reset}%~%b%F{green}]\n└─%B%F{blue}$ %b%F{reset}'
+}
+configure_prompt
+
+# ─[CARGAR TÍTULO DE TERMINAL]──────────────────────────────
+case "$TERM" in
+xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty)
+  TERM_TITLE=$'\e]0;%n@%m: %~\a'
+  ;;
+esac
+
+precmd() {
+  print -Pnr -- "$TERM_TITLE"
+}
+
+# ─[FINAL]──────────────────────────────
+echo "%F{magenta}usuario infosec%f"
