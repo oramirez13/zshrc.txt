@@ -1,34 +1,26 @@
-# Orami's Cyberpunk ZSH Config for Kali Linux
+# Orami's Cyberpunk ZSH Config for Arch Linux
 
-# ─[POWERLEVEL10K THEME]──────────────────────────────
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
-# ─[FASTFETCH INFO]──────────────────────────────
 if command -v fastfetch &>/dev/null; then
   fastfetch --logo color --color-keys magenta --color-title cyan
 fi
 
-# ─[BANNER]──────────────────────────────
 if command -v figlet &>/dev/null && command -v lolcat &>/dev/null; then
   figlet -f slant "Welcome back, Neo.." | lolcat
 fi
 
-# ─[ZSH PLUGINS]──────────────────────────────
-# Autosuggestions
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-# Syntax highlighting (debe ir al final)
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# ─[ALIAS DE EXA]──────────────────────────────
 alias ls='exa -al --color=always --group-directories-first'
 alias la='exa -a'
 alias ll='exa -l'
 alias lt='exa -aT --icons'
 alias tree='exa -T --icons'
+alias cls='clear'
 
-# ─[ALIAS DE SISTEMA Y PENTEST]──────────────────────────────
-alias update='sudo apt update && sudo apt upgrade -y'
+alias update='sudo pacman -Syu'
 alias ports='netstat -tulanp'
 alias ipinfo='ip a'
 alias myip='curl ifconfig.me'
@@ -38,28 +30,28 @@ alias gs='git status'
 alias gc='git commit -m'
 alias ..='cd ..'
 alias ...='cd ../..'
-
-# ─[🐍 PYTHON ENTORNO]──────────────────────────────
 alias venv="python3 -m venv .venv && source .venv/bin/activate"
-
-# ─[CARGAR CAMBIOS]──────────────────────────────
 alias reload='source ~/.zshrc'
+alias linuxdoc='w3m https://tldp.org/'
+alias archwiki='w3m https://wiki.archlinux.org/title/Main_page'
 
-# ─[HISTORIAL INTELIGENTE]──────────────────────────────
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_REDUCE_BLANKS
+setopt AUTO_CD
 
-# ─[PROMPT LIGHTNING]──────────────────────────────
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# ─[COMPLETIONS Y SUGERENCIAS]──────────────────────────────
 autoload -Uz compinit && compinit
 zle -N autosuggest-accept
 bindkey '^ ' autosuggest-accept
 
-# ─[FINAL]──────────────────────────────
-echo "%F{magenta}usuario infosec%f"
+# echo "%F{magenta}usuario infosec%f"
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /home/usuario/.dart-cli-completion/zsh-config.zsh ]] && . /home/usuario/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
