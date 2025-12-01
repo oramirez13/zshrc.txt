@@ -1,4 +1,4 @@
-# Orami's Cyberpunk ZSH Config for Arch Linux
+# orami's Cyberpunk ZSH Config for Arch Linux
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
@@ -7,7 +7,7 @@ if command -v fastfetch &>/dev/null; then
 fi
 
 if command -v figlet &>/dev/null && command -v lolcat &>/dev/null; then
-  figlet -f slant "Welcome back, Neo.." | lolcat
+  figlet -f slant "Welcome back, Neo" | lolcat
 fi
 
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
