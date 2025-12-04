@@ -1,57 +1,97 @@
-# orami's Cyberpunk ZSH Config for Arch Linux
+# ────────────────────────────────
+# orami's Cyberpunk ZSH Config - Arch Linux Edition
+# ────────────────────────────────
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
+# ─[POWERLEVEL10K THEME]──────────────────────────────
+if [[ -r ~/powerlevel10k/powerlevel10k.zsh-theme ]]; then
+  source ~/powerlevel10k/powerlevel10k.zsh-theme
+fi
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
+# ─[FASTFETCH / NEOFETCH]──────────────────────────────
 if command -v fastfetch &>/dev/null; then
   fastfetch --logo color --color-keys magenta --color-title cyan
+elif command -v neofetch &>/dev/null; then
+  neofetch
 fi
 
+# ─[BANNER]──────────────────────────────
 if command -v figlet &>/dev/null && command -v lolcat &>/dev/null; then
-  figlet -f slant "Welcome back, Neo" | lolcat
+  figlet -f slant "Welcome back, Orami" | lolcat -a -d 3
 fi
 
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Marca personal (usa lolcat si existe)
+if command -v lolcat &>/dev/null; then
+  echo "░▒▓ Orami Infosec - Arch Linux ▓▒░" | lolcat
+else
+  echo "%F{magenta}Orami Infosec - Arch Linux%f"
+fi
 
-alias ls='exa -al --color=always --group-directories-first'
-alias la='exa -a'
-alias ll='exa -l'
-alias lt='exa -aT --icons'
-alias tree='exa -T --icons'
-alias cls='clear'
+# ─[ZSH PLUGINS]──────────────────────────────
+# Autosuggestions
+if [[ -r ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 
+# Syntax highlighting (siempre al final)
+if [[ -r ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# ─[COMPLETIONS Y SUGERENCIAS]──────────────────────────────
+autoload -Uz compinit && compinit
+zle -N autosuggest-accept
+bindkey '^ ' autosuggest-accept
+
+# ─[ALIAS DE EZA/EXA]──────────────────────────────
+if command -v eza &>/dev/null; then
+  alias ls='eza -al --color=always --group-directories-first --icons'
+  alias la='eza -a'
+  alias ll='eza -l'
+  alias cls='clear'
+  alias lt='eza -aT --icons'
+  alias tree='eza -T --icons'
+elif command -v exa &>/dev/null; then
+  alias ls='exa -al --color=always --group-directories-first --icons'
+  alias la='exa -a'
+  alias ll='exa -l'
+  alias cls='clear'
+  alias lt='exa -aT --icons'
+  alias tree='exa -T --icons'
+fi
+
+# ─[ALIAS DE SISTEMA Y PENTEST]──────────────────────────────
 alias update='sudo pacman -Syu'
-alias ports='netstat -tulanp'
+alias ports='ss -tulanp'
 alias ipinfo='ip a'
-alias myip='curl ifconfig.me'
+alias myip='curl -s ifconfig.me'
 alias pyserve='python3 -m http.server'
 alias scan='nmap -sV -Pn'
 alias gs='git status'
 alias gc='git commit -m'
 alias ..='cd ..'
 alias ...='cd ../..'
-alias venv="python3 -m venv .venv && source .venv/bin/activate"
-alias reload='source ~/.zshrc'
-alias linuxdoc='w3m https://tldp.org/'
-alias archwiki='w3m https://wiki.archlinux.org/title/Main_page'
 
+# ─[PYTHON ENTORNO]──────────────────────────────
+alias venv="python3 -m venv .venv && source .venv/bin/activate"
+
+# ─[CARGAR CAMBIOS]──────────────────────────────
+alias reload='source ~/.zshrc'
+
+# ─[HISTORIAL INTELIGENTE]──────────────────────────────
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt INC_APPEND_HISTORY
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_REDUCE_BLANKS
+
+# ─[MISC RECOMENDADO]──────────────────────────────
 setopt AUTO_CD
+setopt CORRECT
 
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-autoload -Uz compinit && compinit
-zle -N autosuggest-accept
-bindkey '^ ' autosuggest-accept
-
-# echo "%F{magenta}orami infosec%f"
-
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /home/orami/.dart-cli-completion/zsh-config.zsh ]] && . /home/orami/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
+# ─[FINAL]──────────────────────────────
