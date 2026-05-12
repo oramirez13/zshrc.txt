@@ -2,7 +2,7 @@
 
 A clean, customized `.zshrc` configuration for Zsh, compatible with
 Powerlevel10k, Fastfetch, and Oh My Zsh. Includes useful aliases for
-Arch Linux, Kali Linux, and other distros — without annoying warnings
+Arch Linux, Kali Linux, and other distros - without annoying warnings
 on startup.
 
 ---
