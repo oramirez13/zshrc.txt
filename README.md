@@ -33,7 +33,7 @@ your package manager.
 | `zsh-syntax-highlighting` | Command highlighting | [github.com/zsh-users/zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) |
 
 > `figlet` and `lolcat` are optional. If they are not installed,
-> the banner is skipped gracefully. If `lolcat` is missing, the
+> the banner is skipped. If `lolcat` is missing, the
 > personal tag falls back to native Zsh magenta color.
 
 ---
