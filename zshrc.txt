@@ -1,97 +1,143 @@
-# ────────────────────────────────
-# orami's Cyberpunk ZSH Config - Arch Linux Edition
-# ────────────────────────────────
+# ─────────────────────────────────────────────
+# ORAMI ZSH CONFIG - ARCH LINUX CYBERPUNK
+# ─────────────────────────────────────────────
 
-# ─[POWERLEVEL10K THEME]──────────────────────────────
+# ─[POWERLEVEL10K]─────────────────────────────
 if [[ -r ~/powerlevel10k/powerlevel10k.zsh-theme ]]; then
   source ~/powerlevel10k/powerlevel10k.zsh-theme
 fi
+
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-# ─[FASTFETCH / NEOFETCH]──────────────────────────────
+# ─[INICIO SOLO EN TERMINALES INTERACTIVAS]────
+# Si la shell no es interactiva, detiene la ejecucion aqui.
+# Evita que fastfetch, figlet y otros corran en scripts o SCP/rsync.
+[[ $- != *i* ]] && return
+
+# ─[FASTFETCH / NEOFETCH]──────────────────────
 if command -v fastfetch &>/dev/null; then
   fastfetch --logo color --color-keys magenta --color-title cyan
 elif command -v neofetch &>/dev/null; then
   neofetch
 fi
 
-# ─[BANNER]──────────────────────────────
+# ─[BANNER]────────────────────────────────────
 if command -v figlet &>/dev/null && command -v lolcat &>/dev/null; then
-  figlet -f slant "Welcome back, Orami" | lolcat -a -d 3
+  figlet -f slant "Welcome back, Neo" | lolcat -a -d 3
 fi
 
-# Marca personal (usa lolcat si existe)
+# Marca personal con fallback de color:
+# Si lolcat esta instalado, pasa el texto por el para colorear con gradiente.
+# Si lolcat NO esta instalado, usa el sistema de colores nativo de zsh (%F{} / %f).
 if command -v lolcat &>/dev/null; then
-  echo "░▒▓ Orami Infosec - Arch Linux ▓▒░" | lolcat
+  echo "░▒▓ orami Infosec - Arch Linux ▓▒░" | lolcat
 else
-  echo "%F{magenta}Orami Infosec - Arch Linux%f"
+  print -P "%F{magenta}░▒▓ orami Infosec - Arch Linux ▓▒░%f"
 fi
 
-# ─[ZSH PLUGINS]──────────────────────────────
-# Autosuggestions
+# ─[PLUGIN: AUTOSUGGESTIONS]───────────────────
 if [[ -r ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
   source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 elif [[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
-# Syntax highlighting (siempre al final)
+# ─[PLUGIN: SYNTAX HIGHLIGHTING]───────────────
+# Debe cargarse al final de los plugins para no interferir con otros.
 if [[ -r ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 elif [[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
   source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-# ─[COMPLETIONS Y SUGERENCIAS]──────────────────────────────
-autoload -Uz compinit && compinit
+# ─[COMPLETIONS]───────────────────────────────
+# Carga el sistema de autocompletado de zsh.
+autoload -Uz compinit
+compinit
+
+# Acepta la sugerencia actual con CTRL + SPACE.
 zle -N autosuggest-accept
 bindkey '^ ' autosuggest-accept
 
-# ─[ALIAS DE EZA/EXA]──────────────────────────────
+# ─[HISTORIAL]─────────────────────────────────
+HISTFILE=~/.zsh_history     # Archivo donde se guarda el historial.
+HISTSIZE=10000              # Maximo de entradas en memoria.
+SAVEHIST=10000              # Maximo de entradas guardadas en disco.
+
+setopt INC_APPEND_HISTORY   # Guarda cada comando inmediatamente, no al cerrar.
+setopt HIST_IGNORE_ALL_DUPS # Ignora duplicados en el historial.
+setopt HIST_REDUCE_BLANKS   # Elimina espacios en blanco innecesarios.
+
+# ─[OPCIONES UTILES]───────────────────────────
+setopt AUTO_CD              # Permite cambiar de directorio sin escribir 'cd'.
+setopt CORRECT              # Sugiere correcciones si escribes un comando mal.
+setopt INTERACTIVE_COMMENTS # Permite escribir # comentarios en la terminal.
+
+# ─[VARIABLES DE ENTORNO]──────────────────────
+export EDITOR=nano          # Editor de texto por defecto para el sistema.
+export BROWSER=firefox      # Navegador por defecto para el sistema.
+
+# ─[PATH PERSONALIZADO]────────────────────────
+# Agrega ~/.local/bin al PATH para binarios instalados por el usuario.
+export PATH="$HOME/.local/bin:$PATH"
+
+# ─[ALIASES GENERALES]─────────────────────────
+alias cls='clear'              # Limpia la pantalla de la terminal.
+alias reload='source ~/.zshrc' # Recarga la configuracion sin cerrar la terminal.
+
+# Navegacion rapida entre directorios.
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# ─[ALIASES EZA / EXA]─────────────────────────
+# eza es el sucesor moderno de exa. Se usa el que este disponible.
 if command -v eza &>/dev/null; then
-  alias ls='eza -al --color=always --group-directories-first --icons'
-  alias la='eza -a'
-  alias ll='eza -l'
-  alias cls='clear'
-  alias lt='eza -aT --icons'
-  alias tree='eza -T --icons'
+  alias ls='eza -al --icons --group-directories-first'  # Listado completo con iconos.
+  alias ll='eza -l'                                     # Listado largo sin ocultos.
+  alias la='eza -a'                                     # Muestra archivos ocultos.
+  alias lt='eza -aT --icons'                            # Vista de arbol con iconos.
+  alias tree='eza -T --icons'                           # Arbol sin ocultos.
 elif command -v exa &>/dev/null; then
-  alias ls='exa -al --color=always --group-directories-first --icons'
-  alias la='exa -a'
+  alias ls='exa -al --icons --group-directories-first'
   alias ll='exa -l'
-  alias cls='clear'
+  alias la='exa -a'
   alias lt='exa -aT --icons'
   alias tree='exa -T --icons'
 fi
 
-# ─[ALIAS DE SISTEMA Y PENTEST]──────────────────────────────
-alias update='sudo pacman -Syu'
-alias ports='ss -tulanp'
-alias ipinfo='ip a'
-alias myip='curl -s ifconfig.me'
-alias pyserve='python3 -m http.server'
-alias scan='nmap -sV -Pn'
-alias gs='git status'
-alias gc='git commit -m'
-alias ..='cd ..'
-alias ...='cd ../..'
+# ─[PACMAN / SISTEMA]──────────────────────────
+alias update='sudo pacman -Syu'                  # Actualiza todos los paquetes.
+alias cleanup='sudo pacman -Rns $(pacman -Qtdq)' # Elimina paquetes huerfanos.
+alias ports='ss -tulanp'                         # Muestra puertos abiertos.
+alias ipinfo='ip a'                              # Muestra interfaces de red.
+alias myip='curl -s ifconfig.me'                 # Muestra tu IP publica.
 
-# ─[PYTHON ENTORNO]──────────────────────────────
-alias venv="python3 -m venv .venv && source .venv/bin/activate"
+# ─[PYTHON]────────────────────────────────────
+alias venv='python3 -m venv .venv'         # Crea un entorno virtual en .venv/
+alias activate='source .venv/bin/activate' # Activa el entorno virtual existente.
+alias pyserve='python3 -m http.server'     # Levanta un servidor HTTP simple.
 
-# ─[CARGAR CAMBIOS]──────────────────────────────
-alias reload='source ~/.zshrc'
+# ─[GIT]───────────────────────────────────────
+alias gs='git status'    # Muestra el estado del repositorio.
+alias ga='git add .'     # Agrega todos los cambios al staging area.
+alias gc='git commit -m' # Hace un commit; uso: gc "mensaje"
+alias gp='git push'      # Sube los commits al repositorio remoto.
 
-# ─[HISTORIAL INTELIGENTE]──────────────────────────────
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
-setopt INC_APPEND_HISTORY
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_REDUCE_BLANKS
+# ─[NMAP / PENTEST]────────────────────────────
+alias scan='nmap -sV -Pn'         # Escaneo de versiones sin ping previo.
+alias sniff='sudo tcpdump -i any' # Captura trafico en todas las interfaces.
 
-# ─[MISC RECOMENDADO]──────────────────────────────
-setopt AUTO_CD
-setopt CORRECT
+# ─[XAMPP]─────────────────────────────────────
+alias xampp-ui='sudo /opt/lampp/manager-linux-x64.run' # Abre el panel grafico de XAMPP.
+alias xampp-start='sudo /opt/lampp/lampp start'        # Inicia Apache, MySQL y FTP.
+alias xampp-stop='sudo /opt/lampp/lampp stop'          # Detiene todos los servicios.
+alias xampp-restart='sudo /opt/lampp/lampp restart'    # Reinicia todos los servicios.
+alias xampp-status='sudo /opt/lampp/lampp status'      # Muestra el estado de los servicios.
 
-# ─[FINAL]──────────────────────────────
+# ─[LARAVEL]───────────────────────────────────
+alias artisan='php artisan'                    # Atajo para el CLI de Laravel.
+alias serve='php artisan serve'                # Levanta el servidor de desarrollo.
+alias migrate='php artisan migrate'            # Ejecuta las migraciones pendientes.
+alias fresh='php artisan migrate:fresh --seed' # Borra todo, migra y carga seeders.
+
+# ─[FINAL]─────────────────────────────────────
