@@ -7,7 +7,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # ────────────────────────────────────────────────
-# ⚡ Orami's Cyberpunk ZSH Config for Kali Linux ⚡
+# ⚡ USUARIO's Cyberpunk ZSH Config for Kali Linux ⚡
 # ────────────────────────────────────────────────
 
 # ─[CONFIGURACIÓN BÁSICA DE ZSH]──────────────────────────────

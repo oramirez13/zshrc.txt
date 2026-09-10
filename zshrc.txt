@@ -30,9 +30,9 @@ fi
 # Si lolcat esta instalado, pasa el texto por el para colorear con gradiente.
 # Si lolcat NO esta instalado, usa el sistema de colores nativo de zsh (%F{} / %f).
 if command -v lolcat &>/dev/null; then
-  echo "░▒▓ usuario Infosec - Arch Linux ▓▒░" | lolcat
+  echo "░▒▓ usuario - Arch Linux ▓▒░" | lolcat
 else
-  print -P "%F{magenta}░▒▓ usuario Infosec - Arch Linux ▓▒░%f"
+  print -P "%F{magenta}░▒▓ usuario - Arch Linux ▓▒░%f"
 fi
 
 # ─[PLUGIN: AUTOSUGGESTIONS]───────────────────
